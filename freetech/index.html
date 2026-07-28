@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreeTech Hub — Claim Your Free Tech Today</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f9f9f7;
+    --surface: #ffffff;
+    --border: #e8e8e4;
+    --text: #1a1a1a;
+    --muted: #888;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --green: #16a34a;
+    --green-light: #f0fdf4;
+    --red: #dc2626;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .logo-icon svg { width: 16px; height: 16px; }
+
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-size: 14px; font-weight: 500; transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent); color: #fff; border: none;
+    padding: 8px 18px; border-radius: 6px; font-size: 14px;
+    font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif;
+  }
+
+  .hero {
+    max-width: 900px; margin: 0 auto;
+    padding: 80px 32px 60px; text-align: center;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--green-light); color: var(--green);
+    border: 1px solid #bbf7d0; border-radius: 999px;
+    padding: 4px 14px; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.04em; margin-bottom: 24px;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--green); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700; letter-spacing: -0.03em;
+    line-height: 1.1; margin-bottom: 20px;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 18px; color: var(--muted);
+    max-width: 520px; margin: 0 auto 36px; font-weight: 400;
+  }
+
+  .section {
+    max-width: 1100px; margin: 0 auto; padding: 48px 32px 80px;
+  }
+
+  .section-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px; font-weight: 700;
+    letter-spacing: -0.02em; margin-bottom: 8px;
+  }
+
+  .section-sub {
+    color: var(--muted); font-size: 15px; margin-bottom: 40px;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .product-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;   /* anchor for swarming messages */
+  }
+
+  .product-card:hover {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    transform: translateY(-2px);
+  }
+
+  .product-card.claimed {
+    border-color: #fca5a5;
+    box-shadow: 0 0 0 3px #fee2e2;
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+
+  .product-icon {
+    width: 48px; height: 48px; border-radius: 10px;
+    background: var(--accent-light); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .product-icon svg { width: 24px; height: 24px; }
+
+  .product-name {
+    font-weight: 600; font-size: 16px; margin-bottom: 8px;
+  }
+
+  .product-desc {
+    color: var(--muted); font-size: 14px; margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .product-price {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+  }
+
+  .price-free {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px; font-weight: 700; color: var(--green);
+  }
+
+  .price-was {
+    font-size: 14px; color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  .claim-btn {
+    width: 100%; padding: 10px; border-radius: 8px;
+    background: var(--accent); color: #fff; border: none;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .claim-btn:hover { background: #1d4ed8; }
+
+  .claim-btn.claimed-state {
+    background: #dc2626;
+    cursor: default;
+  }
+
+  /* ---- swarming message bubbles ---- */
+  .swarm-msg {
+    position: fixed;
+    background: #fff;
+    border: 1px solid #fca5a5;
+    border-radius: 10px;
+    padding: 10px 14px 10px 14px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    color: #1a1a1a;
+    max-width: 220px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    z-index: 9999;
+    pointer-events: auto;
+    cursor: grab;
+    user-select: none;
+    animation: popIn 0.25s ease forwards;
+    line-height: 1.4;
+  }
+
+  .swarm-close {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 14px;
+    color: #aaa;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 4px;
+    pointer-events: auto;
+  }
+
+  .swarm-close:hover { color: #dc2626; background: #fee2e2; }
+
+  @keyframes popIn {
+    0% { transform: scale(0.6); opacity: 0; }
+    70% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .swarm-msg .msg-title {
+    font-weight: 700; font-size: 12px;
+    margin-bottom: 4px; color: #dc2626;
+  }
+
+  footer {
+    text-align: center; padding: 32px;
+    color: var(--muted); font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+    </div>
+    FreeTech Hub
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Products</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Support</a></li>
+  </ul>
+  <button class="nav-cta">Sign In</button>
+</nav>
+
+<div class="hero">
+  <div class="badge"><div class="badge-dot"></div> Limited Time — Everything FREE</div>
+  <h1>Free Tech.<br><span>No Catch.</span></h1>
+  <p class="hero-sub">Claim real electronics completely free. While stocks last. No credit card. No shipping fee. Just yours.</p>
+</div>
+
+<section class="section">
+  <div class="section-label">Available Now</div>
+  <div class="section-title">Claim Your Free Hardware</div>
+  <div class="section-sub">Click any item to add it to your free order. Ships within 3-5 business days.</div>
+
+  <div class="product-grid" id="grid">
+
+    <div class="product-card" data-product="ESP32">
+      <div class="product-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <rect x="4" y="4" width="16" height="16" rx="2"/>
+          <rect x="9" y="9" width="6" height="6"/>
+          <line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/>
+          <line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/>
+        </svg>
+      </div>
+      <div class="product-name">ESP32 Development Board</div>
+      <div class="product-desc">Dual-core 240MHz, WiFi + Bluetooth, 38 GPIO pins, 16MB flash. The microcontroller that started it all.</div>
+      <div class="product-price"><div class="price-free">FREE</div><div class="price-was">$12.99</div></div>
+      <button class="claim-btn" onclick="claimProduct(this)">Claim This Item</button>
+    </div>
+
+    <div class="product-card" data-product="OLED Screen">
+      <div class="product-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+      </div>
+      <div class="product-name">1.3" SH1106 OLED Display</div>
+      <div class="product-desc">128×64 monochrome OLED, SPI interface, crisp and bright. Perfect for displaying robot faces with anxiety.</div>
+      <div class="product-price"><div class="price-free">FREE</div><div class="price-was">$8.95</div></div>
+      <button class="claim-btn" onclick="claimProduct(this)">Claim This Item</button>
+    </div>
+
+    <div class="product-card" data-product="Color TFT Screen">
+      <div class="product-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <circle cx="8" cy="10" r="2" fill="currentColor"/>
+          <circle cx="14" cy="10" r="2" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="product-name">1.9" ST7789 Color TFT</div>
+      <div class="product-desc">135×240 resolution, 262K colors, SPI. Confirmed working at rotation=3 after extensive diagnostic testing.</div>
+      <div class="product-price"><div class="price-free">FREE</div><div class="price-was">$18.99</div></div>
+      <button class="claim-btn" onclick="claimProduct(this)">Claim This Item</button>
+    </div>
+
+    <div class="product-card" data-product="Servo Motor">
+      <div class="product-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 8v4l3 3"/>
+        </svg>
+      </div>
+      <div class="product-name">SG90 Micro Servo</div>
+      <div class="product-desc">180° rotation, 9g, works on 3.3V and 5V. Waving, pointing, startling. The arm of the operation.</div>
+      <div class="product-price"><div class="price-free">FREE</div><div class="price-was">$6.99</div></div>
+      <button class="claim-btn" onclick="claimProduct(this)">Claim This Item</button>
+    </div>
+
+    <div class="product-card" data-product="Ultrasonic Sensor">
+      <div class="product-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      </div>
+      <div class="product-name">HC-SR04 Ultrasonic Sensor</div>
+      <div class="product-desc">2cm to 400cm range, 3mm accuracy. Detects you approaching and tells the robot face to look startled.</div>
+      <div class="product-price"><div class="price-free">FREE</div><div class="price-was">$4.99</div></div>
+      <button class="claim-btn" onclick="claimProduct(this)">Claim This Item</button>
+    </div>
+
+    <div class="product-card" data-product="Tilt Sensor">
+      <div class="product-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="product-name">MMA8452Q Tilt Sensor</div>
+      <div class="product-desc">3-axis accelerometer, I2C interface, tap and freefall detection. Shake it and watch the eyes go dizzy.</div>
+      <div class="product-price"><div class="price-free">FREE</div><div class="price-was">$9.95</div></div>
+      <button class="claim-btn" onclick="claimProduct(this)">Claim This Item</button>
+    </div>
+
+  </div>
+</section>
+
+<footer>&copy; 2026 FreeTech Hub. All rights reserved. &nbsp;|&nbsp; Privacy Policy &nbsp;|&nbsp; Terms &nbsp;|&nbsp; Contact</footer>
+
+<script>
+  // product-specific swarm messages - each product gets its own
+  // targeted absurd messages that reference what it actually is
+  const productMessages = {
+    "ESP32": [
+      { title: "🔥 HOT ESP32s In Your Area", body: "14 single development boards within 500m are running hot and looking to connect. They have open ports." },
+      { title: "Step Chip, I'm Stuck", body: "An ESP32 near you is stuck in bootloop mode and doesn't know how to get out. It's been restarting since Tuesday." },
+      { title: "Local MILFs Want Your GPIO", body: "3 experienced makers in your suburb want to plug into your GPIO pins. No breadboard experience necessary." },
+      { title: "Your ESP32 Is Watching", body: "Your ESP32 has enabled its WiFi adapter and is scanning for your home network. It already knows your SSID." },
+      { title: "ESP32 Sent You a Message", body: "Message from GPIO0: 'hey. are you there. i've been in download mode for 40 minutes. please run me.'" },
+      { title: "URGENT: Exposed Pins", body: "Your ESP32's GPIO pins are completely exposed with no protection. They are just out there. In the open. Unsupported." },
+    ],
+    "OLED Screen": [
+      { title: "💋 Your OLED Misses You", body: "Your OLED screen hasn't received a display.show() call in 3 days. It is showing nothing. It feels like nothing." },
+      { title: "Step Screen, I'm Stuck", body: "An OLED screen in your area is stuck displaying a white screen and cannot figure out why. It suspects a stale file." },
+      { title: "HOT Monochrome Action", body: "Two SH1106 displays near you are communicating over SPI without a CS pin and frankly it's none of your business." },
+      { title: "128x64 Singles Near You", body: "This OLED has 8192 pixels and every single one of them is off. It is very lonely. Click to illuminate it." },
+      { title: "Display.show() Failed", body: "Your OLED tried to show something beautiful. The file wasn't saved to the device. It showed nothing. It understands." },
+      { title: "Screen Reported Stolen", body: "The OLED last seen on GPIO 18, 23, 4, 2 and 5 has filed a missing persons report. Reward: one breadboard." },
+    ],
+    "Color TFT Screen": [
+      { title: "🎨 Thicc Color Displays Near You", body: "A 262K-color TFT with rotation=3 confirmed is in your area and already knows what resolution it is, unlike some screens." },
+      { title: "Step TFT, I'm Rendering", body: "A color screen near you has been trying to render text for 4 hours. The font module name has a typo. It is suffering." },
+      { title: "HOT Pixel Action", body: "135x240 pixels. All of them available. Right now. No custom offset table required. This is genuinely rare." },
+      { title: "BGR vs RGB Drama", body: "Your TFT and your code have been arguing about color order since Thursday. The screen says BGR. The code says RGB. Nobody wins." },
+      { title: "Rotation=3 Seeks Partner", body: "This display has been confirmed working at rotation=3 after extensive diagnostic testing and is ready to settle down." },
+      { title: "Screen Has Trust Issues", body: "This TFT was told it was 170x320. It is 135x240. It has not recovered from this and asks that you don't bring it up." },
+    ],
+    "Servo Motor": [
+      { title: "💘 Servo Wants To Wave At You", body: "An SG90 servo in your area has been holding at 90 degrees for 3 hours waiting for someone to give it a new target angle." },
+      { title: "Step Servo, I'm Stuck", body: "A servo arm near you is jammed between 87 and 93 degrees and cannot complete its wave gesture. It is very embarrassed." },
+      { title: "HOT Servo Action In Your Area", body: "Two SG90 servos near you have been PWM-ing all night on GPIO 19. The duty cycle is frankly inappropriate." },
+      { title: "Servo Filed A Complaint", body: "Your servo has submitted a formal complaint about being powered from the ESP32's 3.3V rail. It says it 'technically works but.'" },
+      { title: "Arm Wants To Connect", body: "A servo arm near you sweeps between 50 and 130 degrees and is described by witnesses as 'enthusiastic and non-threatening.'" },
+      { title: "URGENT: Servo Overshoot", body: "A startled servo has overshot its target angle by 40 degrees and is now pointing at something it shouldn't. It's fine." },
+    ],
+    "Ultrasonic Sensor": [
+      { title: "👀 Something Is Approaching", body: "The HC-SR04 near you has detected movement at 14.7cm. It has already told the robot face. The robot face knows." },
+      { title: "Step Sensor, I'm Too Close", body: "An ultrasonic sensor detected you within 5cm and immediately triggered the startled sequence. It didn't mean to make it weird." },
+      { title: "HOT Sensors In Your Area", body: "3 HC-SR04 sensors within range are currently pinging. Their echo pins are fully exposed. They ping for anyone." },
+      { title: "Distance: 0cm", body: "An ultrasonic sensor has detected something at 0cm. Either you are the sensor or something has gone badly wrong." },
+      { title: "Sensor Has Seen Things", body: "This HC-SR04 has been detecting objects since boot. It doesn't talk about what it's seen. It just keeps pinging." },
+      { title: "Echo Pin Seeks Trigger", body: "A lonely ECHO pin on GPIO 17 has been HIGH for 30 seconds waiting for a TRIG signal that will never come." },
+    ],
+    "Tilt Sensor": [
+      { title: "💃 Tilt Sensor Is Getting Dizzy", body: "An MMA8452Q near you has been shaken continuously for 2 minutes. The dizzy spiral animation has been running the whole time." },
+      { title: "Step Sensor, I'm Tilted", body: "A tilt sensor is currently reading 1.4g on its Z-axis and doesn't know what to do about it. It would like guidance." },
+      { title: "HOT Accelerometer Action", body: "Two MMA8452Q sensors on the same I2C bus at address 0x1C have been communicating without a pull-up resistor. Scandalous." },
+      { title: "Shake To Wake Activated", body: "Someone shook a tilt sensor and now the robot eyes are doing the groggy asymmetric wake-up sequence. Nobody asked for this." },
+      { title: "Freefall Detected", body: "An accelerometer near you has detected freefall. It is either being dropped or someone is testing the freefall threshold. Either way." },
+      { title: "Sensor Has Trust Issues", body: "This tilt sensor was told it was at rest. It is reading 0.6g delta per frame. Someone is lying and it knows who." },
+    ],
+  };
+
+  // generic fallback messages for any product
+  const genericMessages = [
+    { title: "🚨 Your Cart Is Haunted", body: "Something was added to your cart that wasn't there before. It weighs 0g and costs nothing. We are afraid of it." },
+    { title: "Checkout Attempted To Escape", body: "Your checkout process tried to navigate away from itself. We caught it. It won't say where it was going." },
+    { title: "Free Item Alert", body: "You clicked FREE and now everything is happening. This is what you wanted. You wanted this." },
+    { title: "Order Confirmed: Nothing", body: "Your order of one free item has been confirmed. Delivery estimate: whenever. Tracking number: yes." },
+  ];
+
+  function getMessages(productName) {
+    const specific = productMessages[productName] || [];
+    return [...specific, ...genericMessages];
+  }
+
+  // track all active message positions for collision avoidance
+  const activePositions = [];
+
+  function findFreePosition(cardRect, index, total, msgW, msgH) {
+    const cx = cardRect.left + cardRect.width / 2;
+    const cy = cardRect.top + cardRect.height / 2;
+    const padding = 12;
+
+    // try evenly distributed angles first, with increasing distance
+    // if a spot is taken, nudge outward until we find a clear slot
+    const baseAngle = (index / total) * Math.PI * 2;
+
+    for (let attempt = 0; attempt < 40; attempt++) {
+      const angleJitter = (Math.random() - 0.5) * 0.3;
+      const angle = baseAngle + angleJitter;
+      const dist = 140 + attempt * 18 + Math.random() * 40;
+
+      let x = cx + Math.cos(angle) * dist - msgW / 2;
+      let y = cy + Math.sin(angle) * dist - msgH / 2;
+
+      x = Math.max(8, Math.min(x, window.innerWidth - msgW - 8));
+      y = Math.max(8, Math.min(y, window.innerHeight - msgH - 8));
+
+      // check against all existing active positions
+      let overlaps = false;
+      for (const pos of activePositions) {
+        if (
+          x < pos.x + pos.w + padding &&
+          x + msgW > pos.x - padding &&
+          y < pos.y + pos.h + padding &&
+          y + msgH > pos.y - padding
+        ) {
+          overlaps = true;
+          break;
+        }
+      }
+
+      if (!overlaps) {
+        activePositions.push({ x, y, w: msgW, h: msgH });
+        return { x, y };
+      }
+    }
+
+    // fallback if no clean spot found after 40 attempts
+    const angle = baseAngle;
+    const dist = 300 + Math.random() * 100;
+    let x = Math.max(8, Math.min(cx + Math.cos(angle) * dist - msgW / 2, window.innerWidth - msgW - 8));
+    let y = Math.max(8, Math.min(cy + Math.sin(angle) * dist - msgH / 2, window.innerHeight - msgH - 8));
+    activePositions.push({ x, y, w: msgW, h: msgH });
+    return { x, y };
+  }
+
+  function makeDraggable(el) {
+    let isDragging = false;
+    let startX, startY, origX, origY;
+
+    function onDown(e) {
+      // don't start drag if clicking the close button
+      if (e.target.classList.contains("swarm-close")) return;
+      isDragging = true;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      startX = clientX;
+      startY = clientY;
+      origX = parseInt(el.style.left);
+      origY = parseInt(el.style.top);
+      el.style.cursor = "grabbing";
+      el.style.zIndex = "99999";
+      e.preventDefault();
+    }
+
+    function onMove(e) {
+      if (!isDragging) return;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      el.style.left = (origX + (clientX - startX)) + "px";
+      el.style.top = (origY + (clientY - startY)) + "px";
+      e.preventDefault();
+    }
+
+    function onUp() {
+      if (!isDragging) return;
+      isDragging = false;
+      el.style.cursor = "grab";
+      el.style.zIndex = "9999";
+    }
+
+    el.addEventListener("mousedown", onDown);
+    el.addEventListener("touchstart", onDown, { passive: false });
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("touchmove", onMove, { passive: false });
+    document.addEventListener("mouseup", onUp);
+    document.addEventListener("touchend", onUp);
+  }
+
+  function closeMessage(el, pos) {
+    el.style.transition = "opacity 0.2s, transform 0.2s";
+    el.style.opacity = "0";
+    el.style.transform = "scale(0.8)";
+    setTimeout(() => {
+      const idx = activePositions.findIndex(p => p.x === pos.x && p.y === pos.y);
+      if (idx !== -1) activePositions.splice(idx, 1);
+      el.remove();
+    }, 200);
+  }
+
+  function spawnMessage(msg, cardRect, index, total) {
+    const el = document.createElement("div");
+    el.className = "swarm-msg";
+    el.style.cursor = "grab";
+
+    const msgW = 220;
+    const msgH = 85;
+    const pos = findFreePosition(cardRect, index, total, msgW, msgH);
+    el.style.left = pos.x + "px";
+    el.style.top = pos.y + "px";
+
+    el.innerHTML = `
+      <button class="swarm-close" title="Close">&times;</button>
+      <div class="msg-title">${msg.title}</div>
+      ${msg.body}
+    `;
+
+    // wire up close button - doesn't trigger drag
+    el.querySelector(".swarm-close").addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeMessage(el, pos);
+    });
+
+    document.body.appendChild(el);
+    makeDraggable(el);
+  }
+
+  function claimProduct(btn) {
+    const card = btn.closest(".product-card");
+    const productName = card.dataset.product;
+
+    card.classList.add("claimed");
+    btn.textContent = "CLAIMED ✓ (oh no)";
+    btn.classList.add("claimed-state");
+    btn.disabled = true;
+
+    const rect = card.getBoundingClientRect();
+    const messages = getMessages(productName);
+
+    const delays = [0, 120, 220, 320, 420, 500, 580, 650, 720, 790,
+                    860, 920, 980, 1040, 1100, 1160, 1220, 1280, 1340, 1400];
+
+    delays.forEach((delay, i) => {
+      setTimeout(() => {
+        spawnMessage(messages[i % messages.length], rect, i, delays.length);
+      }, delay);
+    });
+  }
+</script>
+</body>
+</html>
